@@ -31,10 +31,7 @@ class JuiceWidget extends StatelessWidget {
           Row(
             children: [
               Expanded(child: Placeholder()),
-              SizedBox(
-                width: 120,
-                child: Image.asset('assets/challenge/juice.png', width: 350),
-              ),
+              SizedBox(width: 120, child: Image.asset('assets/juice.png')),
             ],
           ),
         ],
