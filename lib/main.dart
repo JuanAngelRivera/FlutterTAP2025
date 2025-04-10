@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
           home: const LoginScreen(),
           routes: {
             "/dash": (context) => const DashboardScreen(),
-            "/challenge": (context) => const ChallengeScreen(),
+            "/challenge": (context) => ChallengeScreen(),
           },
           theme: value == 1 ? lightTheme : darkTheme,
         );
