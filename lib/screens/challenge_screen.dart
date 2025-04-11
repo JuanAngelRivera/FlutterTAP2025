@@ -1,6 +1,12 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
+
+final textStyle = TextStyle(
+  color: Colors.white,
+  fontSize: 16,
+  fontWeight: FontWeight.w600,
+  fontFamily: "Arial",
+);
 
 class JuiceWidget extends StatelessWidget {
   final JuiceEntity juice;
@@ -9,12 +15,6 @@ class JuiceWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = TextStyle(
-      color: Colors.white,
-      fontSize: 16,
-      fontWeight: FontWeight.w600,
-      fontFamily: "Arial",
-    );
     return AspectRatio(
       aspectRatio: 1.25,
       child: LayoutBuilder(
@@ -92,6 +92,87 @@ class JuiceWidget extends StatelessWidget {
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+class CounterWidget extends StatelessWidget {
+  final int currentCount;
+  final Color color;
+  final VoidCallback? onIncreaseClicked;
+  final VoidCallback? onDecreaseClicked;
+  final textstyle = TextStyle(
+    color: Colors.white,
+    fontWeight: FontWeight.w700,
+    fontSize: 18,
+  );
+
+  CounterWidget({
+    super.key,
+    required this.currentCount,
+    required this.color,
+    required this.onIncreaseClicked,
+    required this.onDecreaseClicked,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 52,
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: Colors.white),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(width: 16),
+          GestureDetector(
+            child: Icon(Icons.remove, color: Colors.white),
+            onTap: onDecreaseClicked,
+          ), //ME QUEDE AQUI NYAAAAAAAAAAAAAAAAAA
+          SizedBox(width: 10),
+          Text('0', style: textStyle),
+          SizedBox(width: 10),
+          Icon(Icons.add, color: Colors.white),
+          SizedBox(width: 16),
+        ],
+      ),
+    );
+  }
+}
+
+class JuiceDetailsPage extends StatefulWidget {
+  const JuiceDetailsPage({super.key});
+
+  @override
+  State<JuiceDetailsPage> createState() => _JuiceDetailsPageState();
+}
+
+class _JuiceDetailsPageState extends State<JuiceDetailsPage> {
+  var count = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey,
+      body: Center(
+        child: CounterWidget(
+          currentCount: count,
+          color: widget.juice.color,
+          onIncreaseClicked: () {
+            setState(() {
+              count++;
+            });
+          },
+          onDecreaseClicked: () {
+            setState(() {
+              count--;
+            });
+          },
+        ),
       ),
     );
   }

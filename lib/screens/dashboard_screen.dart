@@ -28,17 +28,27 @@ class DashboardScreen extends StatelessWidget {
       ),
       appBar: AppBar(title: Text("Panel de control")),
       body: HawkFabMenu(
+        fabColor: Colors.pink,
+        backgroundColor: Color.fromARGB(20, 223, 5, 136),
         body: const Center(child: Text("MIIIIAAAAAAAAAAAU")),
         items: [
           HawkFabMenuItem(
-            label: "Theme light",
+            label: "Light Theme",
             ontap: () => GlobalValues.themeMode.value = 1,
             icon: const Icon(Icons.light_mode),
+            color: Colors.pinkAccent,
           ),
           HawkFabMenuItem(
-            label: "Theme dark",
+            label: "Dark Theme",
             ontap: () => GlobalValues.themeMode.value = 0,
             icon: const Icon(Icons.dark_mode),
+            color: Colors.pinkAccent,
+          ),
+          HawkFabMenuItem(
+            label: "Warm Theme",
+            ontap: () => GlobalValues.themeMode.value = 2,
+            icon: const Icon(Icons.beach_access),
+            color: Colors.pinkAccent,
           ),
         ],
       ),
