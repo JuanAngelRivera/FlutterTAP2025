@@ -1,7 +1,11 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 class JuiceWidget extends StatelessWidget {
-  JuiceWidget(JuiceEntity juiceList);
+  final JuiceEntity juice;
+
+  const JuiceWidget(this.juice, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +27,7 @@ class JuiceWidget extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(top: topPadding),
                 decoration: BoxDecoration(
-                  color: Color(0xFFDC691F),
+                  color: juice.color,
                   borderRadius: BorderRadius.circular(24),
                 ),
               ),
@@ -41,7 +45,7 @@ class JuiceWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Juguito de naranja",
+                            juice.name,
                             style: textStyle.copyWith(fontSize: 20),
                           ),
                           RichText(
@@ -52,7 +56,7 @@ class JuiceWidget extends StatelessWidget {
                                   style: textStyle.copyWith(fontSize: 16),
                                 ),
                                 TextSpan(
-                                  text: ("10 pesitos"),
+                                  text: juice.price,
                                   style: textStyle.copyWith(
                                     fontSize: 30,
                                     fontWeight: FontWeight.w800,
@@ -67,7 +71,7 @@ class JuiceWidget extends StatelessWidget {
                             child: TextButton(
                               style: TextButton.styleFrom(
                                 backgroundColor: Colors.white,
-                                foregroundColor: Color(0xFFDC691F),
+                                foregroundColor: juice.color,
                                 textStyle: TextStyle(
                                   fontFamily: "Arial",
                                   fontSize: 16,
@@ -82,10 +86,7 @@ class JuiceWidget extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    width: imageWidth,
-                    child: Image.asset('assets/juice.png'),
-                  ),
+                  SizedBox(width: imageWidth, child: Image.asset(juice.image)),
                 ],
               ),
             ],
@@ -114,13 +115,25 @@ class ChallengeScreen extends StatelessWidget {
   final juiceList = [
     JuiceEntity(
       name: "Juguito de limon",
-      image: "assets/juice1.png",
+      image: "assets/challenge/juice1.png",
       price: "15 pesitos",
       color: Color(0xFFF3BE39),
     ),
     JuiceEntity(
       name: "Juguito de naranja",
-      image: "assets/juice2.png",
+      image: "assets/challenge/juice2.png",
+      price: "10 pesitos",
+      color: Color(0xFFDC691F),
+    ),
+    JuiceEntity(
+      name: "Juguito X",
+      image: "assets/challenge/juice1.png",
+      price: "50 pesitos",
+      color: Color(0xFFF3BE39),
+    ),
+    JuiceEntity(
+      name: "Juguito de naranja",
+      image: "assets/challenge/juice2.png",
       price: "10 pesitos",
       color: Color(0xFFDC691F),
     ),
@@ -129,31 +142,76 @@ class ChallengeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body: Stack(
         children: [
-          Container(
-            height: 38,
-            margin: EdgeInsets.only(left: 20, top: 32, right: 20, bottom: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Image.asset("assets/menu.png"),
-                Text(
+          // El contenido con scroll y el AppBar flotante
+          CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                floating: true,
+                snap: true,
+                backgroundColor: Colors.white,
+                elevation: 0,
+                title: Text(
                   "Cherry´s Cafe",
-                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.w800),
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.black,
+                  ),
                 ),
-                Image.asset("assets/bag.png"),
-              ],
-            ),
+                centerTitle: true,
+                leading: Icon(Icons.menu, color: Colors.black, size: 32),
+                actions: [
+                  Icon(
+                    Icons.shopping_bag_outlined,
+                    color: Colors.black,
+                    size: 32,
+                  ),
+                  SizedBox(width: 12),
+                ],
+              ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 10,
+                    ),
+                    child: JuiceWidget(juiceList[index]),
+                  );
+                }, childCount: juiceList.length),
+              ),
+              SliverToBoxAdapter(child: SizedBox(height: 80)),
+            ],
           ),
-          Expanded(
-            child: Center(
-              child: ListView.builder(
-                padding: EdgeInsets.all(20),
-                itemBuilder: (context, index) {
-                  return JuiceWidget(juiceList[index]);
-                },
-                itemCount: juiceList.length,
+
+          // Menú inferior con blur y transparencia real
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: ClipRRect(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(24),
+                topRight: Radius.circular(24),
+              ),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 18.0, sigmaY: 18.0),
+                child: Container(
+                  height: 64,
+                  padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                  color: Colors.white.withOpacity(
+                    0.1,
+                  ), // Asegúrate de que sea semitransparente
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Icon(Icons.home, size: 32),
+                      Icon(Icons.search, size: 32),
+                      Icon(Icons.favorite, size: 32),
+                      Icon(Icons.account_circle_rounded, size: 32),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
