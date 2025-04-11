@@ -144,7 +144,6 @@ class ChallengeScreen extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // El contenido con scroll y el AppBar flotante
           CustomScrollView(
             slivers: [
               SliverAppBar(
@@ -185,8 +184,6 @@ class ChallengeScreen extends StatelessWidget {
               SliverToBoxAdapter(child: SizedBox(height: 80)),
             ],
           ),
-
-          // Menú inferior con blur y transparencia real
           Align(
             alignment: Alignment.bottomCenter,
             child: ClipRRect(
@@ -199,9 +196,7 @@ class ChallengeScreen extends StatelessWidget {
                 child: Container(
                   height: 64,
                   padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                  color: Colors.white.withOpacity(
-                    0.1,
-                  ), // Asegúrate de que sea semitransparente
+                  color: Colors.white.withOpacity(.75),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
