@@ -78,7 +78,13 @@ class JuiceWidget extends StatelessWidget {
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                Future.delayed(const Duration(seconds: 4)).then(
+                                  (value) {
+                                    Navigator.pushNamed(context, "/dash");
+                                  },
+                                );
+                              },
                               child: Text("nya"),
                             ),
                           ),
@@ -136,7 +142,10 @@ class CounterWidget extends StatelessWidget {
           SizedBox(width: 10),
           Text('0', style: textStyle),
           SizedBox(width: 10),
-          Icon(Icons.add, color: Colors.white),
+          GestureDetector(
+            child: Icon(Icons.add, color: Colors.white),
+            onTap: onIncreaseClicked,
+          ),
           SizedBox(width: 16),
         ],
       ),
@@ -161,7 +170,7 @@ class _JuiceDetailsPageState extends State<JuiceDetailsPage> {
       body: Center(
         child: CounterWidget(
           currentCount: count,
-          color: widget.juice.color,
+          color: Colors.green,
           onIncreaseClicked: () {
             setState(() {
               count++;
