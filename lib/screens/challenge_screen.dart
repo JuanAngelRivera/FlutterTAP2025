@@ -56,7 +56,7 @@ class JuiceWidget extends StatelessWidget {
                                   style: textStyle.copyWith(fontSize: 16),
                                 ),
                                 TextSpan(
-                                  text: juice.price,
+                                  text: juice.price.toString(),
                                   style: textStyle.copyWith(
                                     fontSize: 30,
                                     fontWeight: FontWeight.w800,
@@ -173,20 +173,24 @@ class JuiceDetailsPage extends StatefulWidget {
 
 class _JuiceDetailsPageState extends State<JuiceDetailsPage> {
   var count = 0;
-
+  var total = 0.00;
   @override
   Widget build(BuildContext context) {
+    const topMargin = 40.0;
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
           ListView(
+            padding: EdgeInsets.only(bottom: 100),
             children: [
+              SizedBox(height: topMargin + 30),
               LayoutBuilder(
                 builder: (context, constraints) {
                   final imageHorizontalMargin = constraints.maxWidth * 0.15;
                   final imageHeight = constraints.maxHeight * 0.7;
                   return SizedBox(
-                    height: 450,
+                    height: 400,
                     child: Stack(
                       children: [
                         Container(
@@ -206,8 +210,8 @@ class _JuiceDetailsPageState extends State<JuiceDetailsPage> {
                                 right: imageHorizontalMargin,
                                 bottom: 0,
                               ),
-                              child: Image.network(
-                                'https://flutter4fun.com/wp-content/uploads/2021/09/full.png',
+                              child: Image.asset(
+                                widget.juice.image,
                                 height: imageHeight,
                               ),
                             ),
@@ -221,11 +225,15 @@ class _JuiceDetailsPageState extends State<JuiceDetailsPage> {
                             onIncreaseClicked: () {
                               setState(() {
                                 count++;
+                                total = count * widget.juice.price;
                               });
                             },
                             onDecreaseClicked: () {
                               setState(() {
-                                if (count != 0) count--;
+                                if (count > 0) {
+                                  count--;
+                                  total -= widget.juice.price;
+                                }
                               });
                             },
                           ),
@@ -235,7 +243,6 @@ class _JuiceDetailsPageState extends State<JuiceDetailsPage> {
                   );
                 },
               ),
-              SizedBox(height: 58),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12.0),
                 child: Column(
@@ -255,7 +262,7 @@ class _JuiceDetailsPageState extends State<JuiceDetailsPage> {
                     ),
                     SizedBox(height: 16),
                     Text(
-                      'Descripción de ${widget.juice.name}',
+                      'Descripción de ${widget.juice.name}:\n El juguito de ${widget.juice.name} tiene ${widget.juice.name} y azúcar.',
                       style: TextStyle(color: Color(0xFFB0B1B4), fontSize: 16),
                     ),
                   ],
@@ -290,12 +297,12 @@ class _JuiceDetailsPageState extends State<JuiceDetailsPage> {
                   ],
                 ),
               ),
-              SizedBox(height: 32),
+              SizedBox(height: 50),
             ],
           ),
           Container(
             color: widget.juice.color,
-            padding: EdgeInsets.only(left: 24, right: 24, top: 40, bottom: 8),
+            padding: EdgeInsets.only(left: 24, right: 24, top: topMargin),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -319,6 +326,61 @@ class _JuiceDetailsPageState extends State<JuiceDetailsPage> {
                   color: Colors.white,
                 ),
               ],
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              height: 120,
+              color: Colors.white,
+              padding: EdgeInsets.symmetric(horizontal: 12),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: RichText(
+                      text: TextSpan(
+                        style: TextStyle(color: Colors.black),
+                        children: [
+                          TextSpan(
+                            text: '\$',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          TextSpan(
+                            text:
+                                count == 0
+                                    ? 0.00.toStringAsFixed(2)
+                                    : total.toStringAsFixed(2),
+                            style: TextStyle(
+                              fontSize: 36,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 120,
+                    height: 48,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: widget.juice.color,
+                        foregroundColor: Colors.white,
+                        textStyle: TextStyle(
+                          fontFamily: "Arial",
+                          fontSize: 36,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      onPressed: () {},
+                      child: Text("Comprar"),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -359,7 +421,7 @@ class ReviewList extends StatelessWidget {
 class JuiceEntity {
   final String name;
   final String image;
-  final String price;
+  final double price;
   final Color color;
 
   JuiceEntity({
@@ -375,25 +437,25 @@ class ChallengeScreen extends StatelessWidget {
     JuiceEntity(
       name: "Juguito de limon",
       image: "assets/challenge/juice1.png",
-      price: "15 pesitos",
+      price: 15.99,
       color: Color(0xFFF3BE39),
     ),
     JuiceEntity(
       name: "Juguito de naranja",
       image: "assets/challenge/juice2.png",
-      price: "10 pesitos",
+      price: 10.99,
       color: Color(0xFFDC691F),
     ),
     JuiceEntity(
       name: "Juguito X",
       image: "assets/challenge/juice1.png",
-      price: "50 pesitos",
+      price: 50.99,
       color: Color(0xFFF3BE39),
     ),
     JuiceEntity(
       name: "Juguito de naranja",
       image: "assets/challenge/juice2.png",
-      price: "10 pesitos",
+      price: 100.99,
       color: Color(0xFFDC691F),
     ),
   ];
@@ -401,6 +463,7 @@ class ChallengeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
           CustomScrollView(
