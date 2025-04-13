@@ -79,10 +79,13 @@ class JuiceWidget extends StatelessWidget {
                                 ),
                               ),
                               onPressed: () {
-                                Future.delayed(const Duration(seconds: 4)).then(
-                                  (value) {
-                                    Navigator.pushNamed(context, "/dash");
-                                  },
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) =>
+                                            JuiceDetailsPage(juice: juice),
+                                  ),
                                 );
                               },
                               child: Text("nya"),
@@ -108,7 +111,7 @@ class CounterWidget extends StatelessWidget {
   final Color color;
   final VoidCallback? onIncreaseClicked;
   final VoidCallback? onDecreaseClicked;
-  final textstyle = TextStyle(
+  final txtstyle = TextStyle(
     color: Colors.white,
     fontWeight: FontWeight.w700,
     fontSize: 18,
@@ -136,15 +139,22 @@ class CounterWidget extends StatelessWidget {
         children: [
           SizedBox(width: 16),
           GestureDetector(
-            child: Icon(Icons.remove, color: Colors.white),
             onTap: onDecreaseClicked,
-          ), //ME QUEDE AQUI NYAAAAAAAAAAAAAAAAAA
+            child: Icon(Icons.remove, color: Colors.white),
+          ),
           SizedBox(width: 10),
-          Text('0', style: textStyle),
+          SizedBox(
+            width: 30,
+            child: Text(
+              currentCount.toString(),
+              style: txtstyle,
+              textAlign: TextAlign.center,
+            ),
+          ),
           SizedBox(width: 10),
           GestureDetector(
-            child: Icon(Icons.add, color: Colors.white),
             onTap: onIncreaseClicked,
+            child: Icon(Icons.add, color: Colors.white),
           ),
           SizedBox(width: 16),
         ],
@@ -154,7 +164,8 @@ class CounterWidget extends StatelessWidget {
 }
 
 class JuiceDetailsPage extends StatefulWidget {
-  const JuiceDetailsPage({super.key});
+  final JuiceEntity juice;
+  const JuiceDetailsPage({required this.juice, super.key});
 
   @override
   State<JuiceDetailsPage> createState() => _JuiceDetailsPageState();
@@ -166,22 +177,102 @@ class _JuiceDetailsPageState extends State<JuiceDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey,
-      body: Center(
-        child: CounterWidget(
-          currentCount: count,
-          color: Colors.green,
-          onIncreaseClicked: () {
-            setState(() {
-              count++;
-            });
-          },
-          onDecreaseClicked: () {
-            setState(() {
-              count--;
-            });
-          },
-        ),
+      body: ListView(
+        children: [
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final imageHorizontalMargin = constraints.maxWidth * 0.15;
+              final imageHeight = constraints.maxHeight * 0.7;
+              return SizedBox(
+                height: 400,
+                child: Stack(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: widget.juice.color,
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(32),
+                          bottomRight: Radius.circular(32),
+                        ),
+                      ),
+                      margin: EdgeInsets.only(bottom: 26),
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            left: imageHorizontalMargin,
+                            right: imageHorizontalMargin,
+                            bottom: 0,
+                          ),
+                          child: Image.network(
+                            'https://flutter4fun.com/wp-content/uploads/2021/09/full.png',
+                            height: imageHeight,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: CounterWidget(
+                        currentCount: count,
+                        color: widget.juice.color,
+                        onIncreaseClicked: () {
+                          setState(() {
+                            count++;
+                          });
+                        },
+                        onDecreaseClicked: () {
+                          setState(() {
+                            if (count != 0) count--;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          SizedBox(height: 58),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      widget.juice.name,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    SimpleRatingStar(),
+                  ],
+                ),
+                SizedBox(height: 16),
+                Text(
+                  'Descripción de ${widget.juice.name}',
+                  style: TextStyle(color: Color(0xFFB0B1B4), fontSize: 16),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 32),
+        ],
+      ),
+    );
+  }
+}
+
+class SimpleRatingStar extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: List.generate(
+        5,
+        (index) => Icon(Icons.star, color: Colors.yellow, size: 18),
       ),
     );
   }
