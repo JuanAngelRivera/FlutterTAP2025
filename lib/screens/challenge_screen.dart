@@ -186,7 +186,7 @@ class _JuiceDetailsPageState extends State<JuiceDetailsPage> {
                   final imageHorizontalMargin = constraints.maxWidth * 0.15;
                   final imageHeight = constraints.maxHeight * 0.7;
                   return SizedBox(
-                    height: 420,
+                    height: 450,
                     child: Stack(
                       children: [
                         Container(
@@ -295,7 +295,7 @@ class _JuiceDetailsPageState extends State<JuiceDetailsPage> {
           ),
           Container(
             color: widget.juice.color,
-            padding: EdgeInsets.only(left: 24, right: 24, top: 32, bottom: 8),
+            padding: EdgeInsets.only(left: 24, right: 24, top: 40, bottom: 8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -308,7 +308,7 @@ class _JuiceDetailsPageState extends State<JuiceDetailsPage> {
                 Text(
                   "Cherry´s Café",
                   style: TextStyle(
-                    fontSize: 26,
+                    fontSize: 28,
                     fontWeight: FontWeight.w800,
                     color: Colors.white,
                   ),
