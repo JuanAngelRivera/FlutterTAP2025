@@ -177,89 +177,150 @@ class _JuiceDetailsPageState extends State<JuiceDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
+      body: Stack(
         children: [
-          LayoutBuilder(
-            builder: (context, constraints) {
-              final imageHorizontalMargin = constraints.maxWidth * 0.15;
-              final imageHeight = constraints.maxHeight * 0.7;
-              return SizedBox(
-                height: 400,
-                child: Stack(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: widget.juice.color,
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(32),
-                          bottomRight: Radius.circular(32),
-                        ),
-                      ),
-                      margin: EdgeInsets.only(bottom: 26),
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            left: imageHorizontalMargin,
-                            right: imageHorizontalMargin,
-                            bottom: 0,
+          ListView(
+            children: [
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final imageHorizontalMargin = constraints.maxWidth * 0.15;
+                  final imageHeight = constraints.maxHeight * 0.7;
+                  return SizedBox(
+                    height: 420,
+                    child: Stack(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: widget.juice.color,
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(32),
+                              bottomRight: Radius.circular(32),
+                            ),
                           ),
-                          child: Image.network(
-                            'https://flutter4fun.com/wp-content/uploads/2021/09/full.png',
-                            height: imageHeight,
+                          margin: EdgeInsets.only(bottom: 26),
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                left: imageHorizontalMargin,
+                                right: imageHorizontalMargin,
+                                bottom: 0,
+                              ),
+                              child: Image.network(
+                                'https://flutter4fun.com/wp-content/uploads/2021/09/full.png',
+                                height: imageHeight,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: CounterWidget(
+                            currentCount: count,
+                            color: widget.juice.color,
+                            onIncreaseClicked: () {
+                              setState(() {
+                                count++;
+                              });
+                            },
+                            onDecreaseClicked: () {
+                              setState(() {
+                                if (count != 0) count--;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: CounterWidget(
-                        currentCount: count,
-                        color: widget.juice.color,
-                        onIncreaseClicked: () {
-                          setState(() {
-                            count++;
-                          });
-                        },
-                        onDecreaseClicked: () {
-                          setState(() {
-                            if (count != 0) count--;
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-          SizedBox(height: 58),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  );
+                },
+              ),
+              SizedBox(height: 58),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: Column(
                   children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          widget.juice.name,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        SimpleRatingStar(),
+                      ],
+                    ),
+                    SizedBox(height: 16),
                     Text(
-                      widget.juice.name,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                      ),
+                      'Descripción de ${widget.juice.name}',
+                      style: TextStyle(color: Color(0xFFB0B1B4), fontSize: 16),
                     ),
-                    SimpleRatingStar(),
                   ],
                 ),
-                SizedBox(height: 16),
+              ),
+              SizedBox(height: 32),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Reviews',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        Text(
+                          'See all',
+                          style: TextStyle(
+                            color: Color(0xFFD81C33),
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16),
+                    ReviewList(),
+                  ],
+                ),
+              ),
+              SizedBox(height: 32),
+            ],
+          ),
+          Container(
+            color: widget.juice.color,
+            padding: EdgeInsets.only(left: 24, right: 24, top: 32, bottom: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GestureDetector(
+                  child: Icon(Icons.arrow_back, size: 32, color: Colors.white),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
                 Text(
-                  'Descripción de ${widget.juice.name}',
-                  style: TextStyle(color: Color(0xFFB0B1B4), fontSize: 16),
+                  "Cherry´s Café",
+                  style: TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
+                  ),
+                ),
+                Icon(
+                  Icons.shopping_bag_outlined,
+                  size: 32,
+                  color: Colors.white,
                 ),
               ],
             ),
           ),
-          SizedBox(height: 32),
         ],
       ),
     );
@@ -272,7 +333,24 @@ class SimpleRatingStar extends StatelessWidget {
     return Row(
       children: List.generate(
         5,
-        (index) => Icon(Icons.star, color: Colors.yellow, size: 18),
+        (index) => Icon(Icons.star, color: Color(0xFFF3BE39), size: 18),
+      ),
+    );
+  }
+}
+
+class ReviewList extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 100,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        separatorBuilder: (_, index) => SizedBox(width: 18),
+        itemBuilder: (_, index) {
+          return Image.asset("assets/challenge/juice1.png");
+        },
+        itemCount: 5,
       ),
     );
   }
@@ -333,7 +411,7 @@ class ChallengeScreen extends StatelessWidget {
                 backgroundColor: Colors.white,
                 elevation: 0,
                 title: Text(
-                  "Cherry´s Cafe",
+                  "Cherry´s Café",
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.w800,
