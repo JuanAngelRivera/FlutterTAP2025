@@ -472,7 +472,7 @@ class ReviewList extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         separatorBuilder: (_, index) => SizedBox(width: 18),
         itemBuilder: (_, index) {
-          return Image.asset("assets/challenge/cliente5.png");
+          return Image.asset("assets/challenge/cliente${index + 1}.png");
         },
         itemCount: 5,
       ),
