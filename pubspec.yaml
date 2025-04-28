@@ -63,6 +63,9 @@ flutter:
       - family: deltarune
         fonts:
           - asset: assets/deltarune.ttf
+      - family: Miligant
+        fonts:
+          - asset: assets/Miligant-Regular.ttf
   # To add assets to your application, add an assets section, like this:
   assets:
   - assets/

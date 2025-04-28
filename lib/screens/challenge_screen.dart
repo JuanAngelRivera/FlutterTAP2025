@@ -21,7 +21,7 @@ class JuiceWidget extends StatelessWidget {
         builder: (context, constraints) {
           final topPadding = constraints.maxHeight * 0.2;
           final leftPadding = constraints.maxWidth * 0.1;
-          final imageWidth = constraints.maxWidth * 0.35;
+          final imageWidth = constraints.maxWidth * 0.6;
           return Stack(
             children: [
               Container(
@@ -46,31 +46,53 @@ class JuiceWidget extends StatelessWidget {
                         children: [
                           Text(
                             juice.name,
-                            style: textStyle.copyWith(fontSize: 20),
+                            style:
+                                juice.name == "Malteada de coco"
+                                    ? textStyle.copyWith(
+                                      fontSize: 20,
+                                      color: Colors.black,
+                                    )
+                                    : textStyle.copyWith(
+                                      fontSize: 20,
+                                      color: Colors.white,
+                                    ),
                           ),
                           RichText(
                             text: TextSpan(
                               children: [
                                 TextSpan(
                                   text: "\$",
-                                  style: textStyle.copyWith(fontSize: 16),
+                                  style: textStyle.copyWith(
+                                    fontSize: 16,
+                                    color:
+                                        juice.name == "Malteada de coco"
+                                            ? Colors.black
+                                            : Colors.white,
+                                  ),
                                 ),
                                 TextSpan(
                                   text: juice.price.toString(),
                                   style: textStyle.copyWith(
                                     fontSize: 30,
                                     fontWeight: FontWeight.w800,
+                                    color:
+                                        juice.name == "Malteada de coco"
+                                            ? Colors.black
+                                            : Colors.white,
                                   ),
                                 ),
                               ],
                             ),
                           ),
                           SizedBox(
-                            height: 32,
-                            width: 80,
+                            height: 48,
+                            width: 100,
                             child: TextButton(
                               style: TextButton.styleFrom(
-                                backgroundColor: Colors.white,
+                                backgroundColor:
+                                    juice.name == "Malteada de coco"
+                                        ? Colors.black
+                                        : Colors.white,
                                 foregroundColor: juice.color,
                                 textStyle: TextStyle(
                                   fontFamily: "Arial",
@@ -88,7 +110,13 @@ class JuiceWidget extends StatelessWidget {
                                   ),
                                 );
                               },
-                              child: Text("nya"),
+                              child: Text(
+                                "detalles",
+                                style: textStyle.copyWith(
+                                  color: juice.color,
+                                  fontSize: 20,
+                                ),
+                              ),
                             ),
                           ),
                         ],
@@ -140,21 +168,29 @@ class CounterWidget extends StatelessWidget {
           SizedBox(width: 16),
           GestureDetector(
             onTap: onDecreaseClicked,
-            child: Icon(Icons.remove, color: Colors.white),
+            child: Icon(
+              Icons.remove,
+              color: color == Color(0xFFf4f2ea) ? Colors.black : Colors.white,
+            ),
           ),
           SizedBox(width: 10),
           SizedBox(
             width: 30,
             child: Text(
               currentCount.toString(),
-              style: txtstyle,
+              style: txtstyle.copyWith(
+                color: color == Color(0xFFf4f2ea) ? Colors.black : Colors.white,
+              ),
               textAlign: TextAlign.center,
             ),
           ),
           SizedBox(width: 10),
           GestureDetector(
             onTap: onIncreaseClicked,
-            child: Icon(Icons.add, color: Colors.white),
+            child: Icon(
+              Icons.add,
+              color: color == Color(0xFFf4f2ea) ? Colors.black : Colors.white,
+            ),
           ),
           SizedBox(width: 16),
         ],
@@ -262,7 +298,7 @@ class _JuiceDetailsPageState extends State<JuiceDetailsPage> {
                     ),
                     SizedBox(height: 16),
                     Text(
-                      'Descripción de ${widget.juice.name}:\n El juguito de ${widget.juice.name} tiene ${widget.juice.name} y azúcar.',
+                      'Descripción de ${widget.juice.name}:\nLa ${widget.juice.name} tiene ${widget.juice.name} en polvo, leche fresca y edulcorantes naturales.\nHecho completamente a mano.',
                       style: TextStyle(color: Color(0xFFB0B1B4), fontSize: 16),
                     ),
                   ],
@@ -307,7 +343,14 @@ class _JuiceDetailsPageState extends State<JuiceDetailsPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GestureDetector(
-                  child: Icon(Icons.arrow_back, size: 32, color: Colors.white),
+                  child: Icon(
+                    Icons.arrow_back,
+                    size: 32,
+                    color:
+                        widget.juice.name == "Malteada de coco"
+                            ? Colors.black
+                            : Colors.white,
+                  ),
                   onTap: () {
                     Navigator.of(context).pop();
                   },
@@ -317,13 +360,20 @@ class _JuiceDetailsPageState extends State<JuiceDetailsPage> {
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.w800,
-                    color: Colors.white,
+                    color:
+                        widget.juice.name == "Malteada de coco"
+                            ? Colors.black
+                            : Colors.white,
+                    fontFamily: "Miligant",
                   ),
                 ),
                 Icon(
                   Icons.shopping_bag_outlined,
                   size: 32,
-                  color: Colors.white,
+                  color:
+                      widget.juice.name == "Malteada de coco"
+                          ? Colors.black
+                          : Colors.white,
                 ),
               ],
             ),
@@ -376,7 +426,19 @@ class _JuiceDetailsPageState extends State<JuiceDetailsPage> {
                         ),
                       ),
                       onPressed: () {},
-                      child: Text("Comprar"),
+                      child: Text(
+                        "comprar",
+                        style:
+                            widget.juice.name == "Malteada de coco"
+                                ? textStyle.copyWith(
+                                  fontSize: 20,
+                                  color: Colors.black,
+                                )
+                                : textStyle.copyWith(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                ),
+                      ),
                     ),
                   ),
                 ],
@@ -435,28 +497,28 @@ class JuiceEntity {
 class ChallengeScreen extends StatelessWidget {
   final juiceList = [
     JuiceEntity(
-      name: "Juguito de limon",
-      image: "assets/challenge/juice1.png",
+      name: "Malteada de fresa",
+      image: "assets/challenge/malteadaFresa.png",
       price: 15.99,
-      color: Color(0xFFF3BE39),
+      color: Color(0xFFD02C2F),
     ),
     JuiceEntity(
-      name: "Juguito de naranja",
-      image: "assets/challenge/juice2.png",
+      name: "Malteada de chocolate",
+      image: "assets/challenge/malteadaChocolate.png",
       price: 10.99,
-      color: Color(0xFFDC691F),
+      color: Color(0xFF7d3719),
     ),
     JuiceEntity(
-      name: "Juguito X",
-      image: "assets/challenge/juice1.png",
+      name: "Malteada de mango",
+      image: "assets/challenge/malteadaMango.png",
       price: 50.99,
-      color: Color(0xFFF3BE39),
+      color: Color(0xFFe8ba38),
     ),
     JuiceEntity(
-      name: "Juguito de naranja",
-      image: "assets/challenge/juice2.png",
+      name: "Malteada de coco",
+      image: "assets/challenge/malteadaCoco.png",
       price: 100.99,
-      color: Color(0xFFDC691F),
+      color: Color(0xFFf4f2ea),
     ),
   ];
 
@@ -479,6 +541,7 @@ class ChallengeScreen extends StatelessWidget {
                     fontSize: 28,
                     fontWeight: FontWeight.w800,
                     color: Colors.black,
+                    fontFamily: "Miligant",
                   ),
                 ),
                 centerTitle: true,
