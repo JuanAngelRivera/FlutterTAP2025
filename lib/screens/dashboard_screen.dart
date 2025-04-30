@@ -21,8 +21,13 @@ class DashboardScreen extends StatelessWidget {
         items: [
           SidebarXItem(
             onTap: () => Navigator.pushNamed(context, "/challenge"),
-            icon: Icons.home,
+            icon: Icons.emoji_food_beverage,
             label: "Challenge App",
+          ),
+          SidebarXItem(
+            onTap: () => Navigator.pushNamed(context, "/api"),
+            icon: Icons.movie,
+            label: "Popular Movies",
           ),
         ],
       ),

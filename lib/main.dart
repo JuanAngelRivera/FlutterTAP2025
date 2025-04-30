@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application/screens/challenge_screen.dart';
 import 'package:flutter_application/screens/login_screen.dart';
 import 'package:flutter_application/screens/dashboard_screen.dart';
+import 'package:flutter_application/screens/popular_screen.dart';
 import 'package:flutter_application/utils/global_values.dart';
 import 'package:flutter_application/utils/theme_settings.dart';
 
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
           routes: {
             "/dash": (context) => const DashboardScreen(),
             "/challenge": (context) => ChallengeScreen(),
+            "/api": (context) => PopularScreen(),
           },
           theme: ThemeSettings.setTheme(value),
         );
