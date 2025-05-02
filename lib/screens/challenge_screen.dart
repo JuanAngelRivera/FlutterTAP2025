@@ -417,7 +417,10 @@ class _JuiceDetailsPageState extends State<JuiceDetailsPage> {
                     height: 48,
                     child: TextButton(
                       style: TextButton.styleFrom(
-                        backgroundColor: widget.juice.color,
+                        backgroundColor:
+                            count >= 1
+                                ? widget.juice.color
+                                : widget.juice.color.withAlpha(100),
                         foregroundColor: Colors.white,
                         textStyle: TextStyle(
                           fontFamily: "Arial",
