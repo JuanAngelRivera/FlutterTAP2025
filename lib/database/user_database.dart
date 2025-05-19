@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter_application/models/user_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
@@ -45,10 +46,14 @@ class UserDatabase {
     );
   }
 
-  Future<int> DELETE() async {
+  Future<int> DELETE(int idUser) async {
     final con = await database;
-    return con!.delete('tblUsers');
+    return con!.delete('tblUsers', where: 'idUser = ?', whereArgs: [idUser]);
   }
 
-  SELECT() {}
+  Future<List<UserModel>> SELECT() async {
+    final con = await database;
+    final res = await con!.query('tblUsers');
+    return res.map((user) => UserModel.fromMap(user)).toList();
+  }
 }
