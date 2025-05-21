@@ -22,7 +22,10 @@ class _PopularScreenState extends State<PopularScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Colors.purple,
+        foregroundColor: Colors.white,
+      ),
       body: FutureBuilder(
         future: apiPopular!.getPopularMovies(),
         builder: (context, snapshot) {
@@ -59,7 +62,7 @@ class _PopularScreenState extends State<PopularScreen> {
             image: NetworkImage(popularModel.backdropPath),
           ),
           Container(
-            color: Colors.black,
+            color: Colors.purple,
             height: 70,
             width: MediaQuery.of(context).size.width,
             child: ListTile(
@@ -67,11 +70,7 @@ class _PopularScreenState extends State<PopularScreen> {
                 popularModel.title,
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ),
-              trailing: Icon(
-                Icons.chevron_right,
-                size: 50,
-                color: Colors.white,
-              ),
+              trailing: Icon(Icons.arrow_right, size: 50, color: Colors.white),
               onTap:
                   () => Navigator.pushNamed(
                     context,

@@ -28,14 +28,18 @@ class PopularModel {
   factory PopularModel.fromMap(Map<String, dynamic> movie) {
     return PopularModel(
       backdropPath:
-          'https://image.tmdb.org/t/p/w500/${movie['backdrop_path']}' ??
-          'https://img.lovepik.com/element/40021/7866.png_860.png',
+          movie['backdrop_path'] != null
+              ? 'https://image.tmdb.org/t/p/w500/${movie['backdrop_path']}'
+              : 'https://img.lovepik.com/element/40021/7866.png_1200.png',
       id: movie['id'],
       originalLanguage: movie['original_language'],
       originalTitle: movie['original_title'],
       overview: movie['overview'],
       popularity: movie['popularity'],
-      posterPath: movie['poster_path'],
+      posterPath:
+          movie['poster_path'] != null
+              ? 'https://image.tmdb.org/t/p/w500/${movie['poster_path']}'
+              : 'https://img.lovepik.com/element/40021/7866.png_1200.png',
       releaseDate: movie['release_date'],
       title: movie['title'],
       voteAverage: movie['vote_average'],
