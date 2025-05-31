@@ -32,6 +32,12 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
           "Favoritos",
           style: textStyle.copyWith(color: Colors.white, fontSize: 32),
         ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context, true); // <- Envía señal al volver
+          },
+        ),
       ),
       body:
           GlobalValues.sessionId == null
@@ -55,9 +61,16 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                       padding: EdgeInsets.symmetric(horizontal: 10),
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
+                        final movie = snapshot.data![index];
                         return ItemPopularWidget(
-                          popularModel: snapshot.data![index],
-                          onFavoriteChanged: () => setState(() {}),
+                          key: ValueKey(movie.id),
+                          popularModel: movie,
+                          onFavoriteChanged: (nuevoEstado) {
+                            if (!nuevoEstado) {
+                              setState(() {});
+                            }
+                          },
+                          isFavorite: true,
                         );
                       },
                       separatorBuilder:

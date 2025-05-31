@@ -7,10 +7,15 @@ class ItemPopularWidget extends StatelessWidget {
   const ItemPopularWidget({
     super.key,
     required this.popularModel,
+    required this.isFavorite,
     required this.onFavoriteChanged,
+    this.botonEsquina = true, // Valor por defecto activado
   });
+
   final PopularModel popularModel;
-  final void Function()? onFavoriteChanged;
+  final ValueChanged<bool> onFavoriteChanged;
+  final bool isFavorite;
+  final bool botonEsquina;
 
   @override
   Widget build(BuildContext context) {
@@ -39,20 +44,21 @@ class ItemPopularWidget extends StatelessWidget {
                     '/detail',
                     arguments: DetailScreenArguments(
                       movie: popularModel,
-                      onFavoriteChanged:
-                          onFavoriteChanged, // Este lo puedes pasar desde `FavoriteScreen`
+                      onFavoriteChanged: onFavoriteChanged,
                     ),
                   ),
             ),
           ),
-          Positioned(
-            top: 10,
-            right: 10,
-            child: FavoriteButtonWidget(
-              movieId: popularModel.id,
-              onFavoriteChanged: onFavoriteChanged,
+          if (botonEsquina)
+            Positioned(
+              top: 10,
+              right: 10,
+              child: FavoriteButtonWidget(
+                movieId: popularModel.id,
+                onFavoriteChanged: onFavoriteChanged,
+                isFavorite: isFavorite,
+              ),
             ),
-          ),
         ],
       ),
     );

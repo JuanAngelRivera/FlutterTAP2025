@@ -10,6 +10,7 @@ class PopularModel {
   String title;
   double voteAverage;
   int voteCount;
+  bool isFavorite;
 
   PopularModel({
     required this.backdropPath,
@@ -23,6 +24,7 @@ class PopularModel {
     required this.title,
     required this.voteAverage,
     required this.voteCount,
+    required this.isFavorite,
   });
 
   factory PopularModel.fromMap(Map<String, dynamic> movie) {
@@ -44,6 +46,7 @@ class PopularModel {
       title: movie['title'],
       voteAverage: movie['vote_average'],
       voteCount: movie['vote_count'],
+      isFavorite: false,
     );
   }
 }

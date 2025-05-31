@@ -3,6 +3,7 @@ import 'package:flutter_application/models/popular_model.dart';
 import 'package:flutter_application/network/api_popular.dart';
 import 'package:flutter_application/screens/challenge_screen.dart';
 import 'package:flutter_application/widgets/itemPopularWidget.dart';
+import 'package:flutter_application/utils/global_values.dart';
 
 class PopularScreen extends StatefulWidget {
   const PopularScreen({super.key});
@@ -13,10 +14,27 @@ class PopularScreen extends StatefulWidget {
 
 class _PopularScreenState extends State<PopularScreen> {
   ApiPopular? apiPopular;
+  List<PopularModel>? popularMovies;
+
   @override
   void initState() {
     super.initState();
     apiPopular = ApiPopular();
+    _loadMovies();
+  }
+
+  Future<void> _loadMovies() async {
+    popularMovies = await apiPopular!.getPopularMovies();
+    setState(() {});
+  }
+
+  void _onFavoriteChanged(int movieId, bool isFavorite) {
+    final index = popularMovies!.indexWhere((m) => m.id == movieId);
+    if (index != -1) {
+      setState(() {
+        popularMovies![index].isFavorite = isFavorite;
+      });
+    }
   }
 
   @override
@@ -36,36 +54,36 @@ class _PopularScreenState extends State<PopularScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () => Navigator.pushNamed(context, "/favorite"),
+            onPressed: () async {
+              final result = await Navigator.pushNamed(context, "/favorite");
+              if (result == true) {
+                await _loadMovies();
+              }
+            },
             icon: Icon(Icons.favorite, color: Colors.white, size: 24),
           ),
         ],
       ),
-      body: FutureBuilder(
-        future: apiPopular!.getPopularMovies(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return ListView.separated(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                return ItemPopularWidget(
-                  popularModel: snapshot.data![index],
-                  onFavoriteChanged: null,
-                );
-              },
-              separatorBuilder: (context, index) => SizedBox(height: 10),
-            );
-          }
-          if (snapshot.hasError) {
-            return Center(
-              child: Text('Algo salió mal ${snapshot.error.toString()}'),
-            );
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        },
-      ),
+      body:
+          popularMovies == null
+              ? Center(child: CircularProgressIndicator())
+              : ListView.separated(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                itemCount: popularMovies!.length,
+                itemBuilder: (context, index) {
+                  final movie = popularMovies![index];
+                  return ItemPopularWidget(
+                    key: ValueKey(movie.id),
+                    popularModel: movie,
+                    onFavoriteChanged: (bool isFav) {
+                      _onFavoriteChanged(movie.id, isFav);
+                    },
+                    isFavorite: movie.isFavorite ?? false,
+                    botonEsquina: false,
+                  );
+                },
+                separatorBuilder: (context, index) => SizedBox(height: 10),
+              ),
     );
   }
 }

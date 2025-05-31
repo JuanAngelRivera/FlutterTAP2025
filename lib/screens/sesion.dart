@@ -39,13 +39,7 @@ class _LoginTMDBPageState extends State<LoginTMDBPage> {
       });
       GlobalValues.sessionId = sId;
       print("🎉 Sesión creada: $sId");
-      final favorite = Favorite();
-      favorite.marcarFavorito(
-        movieId: movieId,
-        sessionId: sessionId,
-        context: context,
-      );
-      Navigator.pop(context);
+      Navigator.pop(context, true);
     } else {
       print("Error al crear sesión");
     }

@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/semantics.dart';
 import 'package:flutter_application/models/popular_model.dart';
 
 class Favorite {
@@ -23,14 +22,12 @@ class Favorite {
     );
 
     if (response.statusCode == 201) {
+      print("✅ Pelicula registrada correctamente|MarcarFavorito");
+
       if (!context.mounted) return;
-      print("✅ Pelicula registrada correctamente");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            'Película guardada en favoritos!',
-            style: TextStyle(fontSize: 24),
-          ),
+          content: Text('🎉 Película agregada a favoritos!'),
           duration: Duration(seconds: 3),
           padding: EdgeInsets.all(10),
         ),
@@ -82,6 +79,7 @@ class Favorite {
       );
 
       if (!context.mounted) return;
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
 
       if (response.statusCode == 201 || response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(

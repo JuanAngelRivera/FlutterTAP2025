@@ -109,7 +109,8 @@ class _DetailPopularMovieState extends State<DetailPopularMovie> {
                       FavoriteButtonWidget(
                         movieId: detailScreenArguments.movie.id,
                         onFavoriteChanged:
-                            detailScreenArguments.onFavoriteChanged,
+                            detailScreenArguments.onFavoriteChanged!,
+                        isFavorite: detailScreenArguments.movie.isFavorite,
                       ),
                     ],
                   ),
