@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application/models/popular_model.dart';
+import 'package:flutter_application/screens/detail_popular_movie.dart';
+import 'package:flutter_application/utils/DetailScreenArguments.dart';
 import 'package:flutter_application/widgets/favoriteButtonWidget.dart';
 
 class DetailPopularMovie extends StatefulWidget {
@@ -27,8 +29,8 @@ class _DetailPopularMovieState extends State<DetailPopularMovie> {
 
   @override
   Widget build(BuildContext context) {
-    final popularModel =
-        ModalRoute.of(context)!.settings.arguments as PopularModel;
+    final detailScreenArguments =
+        ModalRoute.of(context)!.settings.arguments as DetailScreenArguments;
     return Scaffold(
       backgroundColor: Colors.white,
       body: CustomScrollView(
@@ -40,7 +42,7 @@ class _DetailPopularMovieState extends State<DetailPopularMovie> {
             backgroundColor: Colors.purple,
             elevation: 0,
             title: Text(
-              popularModel.title,
+              detailScreenArguments.movie.title,
               style: textStyle.copyWith(
                 fontSize: 28,
                 fontWeight: FontWeight.w800,
@@ -62,7 +64,9 @@ class _DetailPopularMovieState extends State<DetailPopularMovie> {
                   fit: StackFit.expand,
                   children: [
                     Image(
-                      image: NetworkImage(popularModel.posterPath),
+                      image: NetworkImage(
+                        detailScreenArguments.movie.posterPath,
+                      ),
                       fit: BoxFit.cover,
                     ),
 
@@ -95,19 +99,23 @@ class _DetailPopularMovieState extends State<DetailPopularMovie> {
                     children: [
                       Flexible(
                         child: Text(
-                          popularModel.title,
+                          detailScreenArguments.movie.title,
                           style: baseStyle.copyWith(
                             fontWeight: FontWeight.w700,
                             fontSize: 32,
                           ),
                         ),
                       ),
-                      FavoriteButtonWidget(movieId: popularModel.id),
+                      FavoriteButtonWidget(
+                        movieId: detailScreenArguments.movie.id,
+                        onFavoriteChanged:
+                            detailScreenArguments.onFavoriteChanged,
+                      ),
                     ],
                   ),
 
                   Text(
-                    "Titulo original: ${popularModel.originalTitle}",
+                    "Titulo original: ${detailScreenArguments.movie.originalTitle}",
                     style: baseStyle,
                   ),
                 ],
