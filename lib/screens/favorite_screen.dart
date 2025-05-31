@@ -8,8 +8,23 @@ class FavoriteScreen extends StatefulWidget {
 }
 
 class _FavoriteScreenState extends State<FavoriteScreen> {
+  final textStyle = TextStyle(
+    color: Colors.white,
+    fontSize: 20,
+    fontFamily: 'Arial',
+    fontWeight: FontWeight.normal,
+  );
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: Text("Me gusta el pene")));
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.purple,
+        foregroundColor: Colors.white,
+        title: Text("Favoritas", style: textStyle.copyWith(fontSize: 32)),
+        centerTitle: true,
+      ),
+      body: Text("nya"),
+    );
   }
 }

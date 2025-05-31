@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application/models/popular_model.dart';
-import 'package:flutter_application/widgets/favorite_button_widget.dart';
+import 'package:flutter_application/widgets/favoriteButtonWidget.dart';
 
 class DetailPopularMovie extends StatefulWidget {
   const DetailPopularMovie({super.key});
@@ -18,66 +18,101 @@ class _DetailPopularMovieState extends State<DetailPopularMovie> {
     fontWeight: FontWeight.normal,
   );
 
+  final baseStyle = TextStyle(
+    color: Colors.black,
+    fontSize: 20,
+    fontFamily: 'Arial',
+    fontWeight: FontWeight.normal,
+  );
+
   @override
   Widget build(BuildContext context) {
     final popularModel =
         ModalRoute.of(context)!.settings.arguments as PopularModel;
     return Scaffold(
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: Image.network(popularModel.posterPath, fit: BoxFit.cover),
-          ),
-
-          CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                expandedHeight: 300,
-                floating: true,
-                snap: true,
-                backgroundColor: Colors.purple,
-                elevation: 0,
-                title: Text(
-                  popularModel.title,
-                  style: textStyle.copyWith(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                centerTitle: true,
-                leading: IconButton(
-                  icon: Icon(Icons.arrow_back, color: Colors.white, size: 32),
-                  onPressed: Navigator.of(context).pop,
-                ),
-                pinned: true,
+      backgroundColor: Colors.white,
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 300,
+            floating: true,
+            snap: true,
+            backgroundColor: Colors.purple,
+            elevation: 0,
+            title: Text(
+              popularModel.title,
+              style: textStyle.copyWith(
+                fontSize: 28,
+                fontWeight: FontWeight.w800,
               ),
+            ),
+            centerTitle: true,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.white, size: 32),
+              onPressed: Navigator.of(context).pop,
+            ),
+            flexibleSpace: LayoutBuilder(
+              builder: (context, constraints) {
+                final percent =
+                    (1 -
+                        (constraints.maxHeight - kToolbarHeight) /
+                            ((300 - kToolbarHeight).clamp(0.0, 1.0)));
 
-              SliverToBoxAdapter(
-                child: Container(
-                  height: 300,
-                  child: LayoutBuilder(
-                    builder: (context, constraints) {
-                      // Puedes hacer que el degradado siempre esté visible o animarlo con scroll si quieres
-                      return Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter,
-                            colors: [
-                              Colors.white,
-                              Colors.white.withOpacity(0.0),
-                            ],
+                return Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Image(
+                      image: NetworkImage(popularModel.posterPath),
+                      fit: BoxFit.cover,
+                    ),
+
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                          colors: [
+                            Colors.white.withAlpha(percent.toInt()),
+                            Colors.white.withAlpha(0),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+            pinned: true,
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          popularModel.title,
+                          style: baseStyle.copyWith(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 32,
                           ),
                         ),
-                      );
-                    },
+                      ),
+                      FavoriteButtonWidget(movieId: popularModel.id),
+                    ],
                   ),
-                ),
+
+                  Text(
+                    "Titulo original: ${popularModel.originalTitle}",
+                    style: baseStyle,
+                  ),
+                ],
               ),
-              SliverList.list(
-                children: [SliverToBoxAdapter(child: Text("miau"))],
-              ),
-            ],
+            ),
           ),
         ],
       ),
