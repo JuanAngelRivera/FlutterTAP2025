@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application/models/popular_model.dart';
 import 'package:flutter_application/network/api_popular.dart';
+import 'package:flutter_application/screens/challenge_screen.dart';
 
 class PopularScreen extends StatefulWidget {
   const PopularScreen({super.key});
@@ -25,6 +26,21 @@ class _PopularScreenState extends State<PopularScreen> {
       appBar: AppBar(
         backgroundColor: Colors.purple,
         foregroundColor: Colors.white,
+        centerTitle: true,
+        title: Text(
+          "Cherry Cinema",
+          style: textStyle.copyWith(
+            color: Colors.white,
+            fontSize: 32,
+            fontFamily: "Miligant",
+          ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.pushNamed(context, "/favorite"),
+            icon: Icon(Icons.favorite, color: Colors.white, size: 24),
+          ),
+        ],
       ),
       body: FutureBuilder(
         future: apiPopular!.getPopularMovies(),

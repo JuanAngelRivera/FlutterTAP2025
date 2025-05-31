@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application/screens/challenge_screen.dart';
 import 'package:flutter_application/screens/detail_popular_movie.dart';
+import 'package:flutter_application/screens/favorite_screen.dart';
 import 'package:flutter_application/screens/login_screen.dart';
 import 'package:flutter_application/screens/dashboard_screen.dart';
 import 'package:flutter_application/screens/popular_screen.dart';
+import 'package:flutter_application/screens/sesion.dart';
 import 'package:flutter_application/utils/global_values.dart';
 import 'package:flutter_application/utils/theme_settings.dart';
 
@@ -25,6 +27,8 @@ class MyApp extends StatelessWidget {
             "/challenge": (context) => ChallengeScreen(),
             "/api": (context) => PopularScreen(),
             "/detail": (context) => DetailPopularMovie(),
+            "/favorite": (context) => FavoriteScreen(),
+            "/sesion": (context) => LoginTMDBPage(),
           },
           theme: ThemeSettings.setTheme(value),
         );

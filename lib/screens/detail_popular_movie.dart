@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application/models/popular_model.dart';
+import 'package:flutter_application/widgets/favoriteButtonWidget.dart';
 
 class DetailPopularMovie extends StatefulWidget {
   const DetailPopularMovie({super.key});
@@ -17,11 +18,19 @@ class _DetailPopularMovieState extends State<DetailPopularMovie> {
     fontWeight: FontWeight.normal,
   );
 
+  final baseStyle = TextStyle(
+    color: Colors.black,
+    fontSize: 20,
+    fontFamily: 'Arial',
+    fontWeight: FontWeight.normal,
+  );
+
   @override
   Widget build(BuildContext context) {
     final popularModel =
         ModalRoute.of(context)!.settings.arguments as PopularModel;
     return Scaffold(
+      backgroundColor: Colors.white,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
@@ -75,8 +84,35 @@ class _DetailPopularMovieState extends State<DetailPopularMovie> {
             ),
             pinned: true,
           ),
-          SliverList.list(children: [
-            ],
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          popularModel.title,
+                          style: baseStyle.copyWith(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 32,
+                          ),
+                        ),
+                      ),
+                      FavoriteButtonWidget(movieId: popularModel.id),
+                    ],
+                  ),
+
+                  Text(
+                    "Titulo original: ${popularModel.originalTitle}",
+                    style: baseStyle,
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
