@@ -1,9 +1,12 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application/network/actor.dart';
 import 'package:flutter_application/network/trailer.dart';
 import 'package:flutter_application/utils/DetailScreenArguments.dart';
+import 'package:flutter_application/widgets/ActorListWidget.dart';
 import 'package:flutter_application/widgets/favoriteButtonWidget.dart';
+import 'package:flutter_application/widgets/starRatingWidget.dart';
 
 class DetailPopularMovie extends StatefulWidget {
   const DetailPopularMovie({super.key});
@@ -65,11 +68,16 @@ class _DetailPopularMovieState extends State<DetailPopularMovie> {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            FadeInImage(
-              placeholder: const AssetImage('assets/loading.gif'),
-              image: NetworkImage(detailScreenArguments.movie.posterPath),
-              fit: BoxFit.cover,
-              alignment: Alignment.topCenter,
+            Hero(
+              tag: detailScreenArguments.movie.id,
+              child: FadeInImage(
+                placeholder: NetworkImage(
+                  detailScreenArguments.movie.backdropPath,
+                ),
+                image: NetworkImage(detailScreenArguments.movie.posterPath),
+                fit: BoxFit.cover,
+                alignment: Alignment.topCenter,
+              ),
             ),
             Container(
               decoration: BoxDecoration(
@@ -93,7 +101,6 @@ class _DetailPopularMovieState extends State<DetailPopularMovie> {
     );
   }
 
-  /// Detalles de la película debajo del AppBar
   SliverToBoxAdapter _buildMovieDetails() {
     final movie = detailScreenArguments.movie;
 
@@ -101,8 +108,7 @@ class _DetailPopularMovieState extends State<DetailPopularMovie> {
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
-          crossAxisAlignment:
-              CrossAxisAlignment.start, // Alinea todo a la izquierda
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -160,17 +166,34 @@ class _DetailPopularMovieState extends State<DetailPopularMovie> {
                         text: 'Estreno: ',
                         style: baseStyle.copyWith(fontWeight: FontWeight.bold),
                       ),
-                      TextSpan(text: '${movie.releaseDate}\n\n'),
+                      TextSpan(
+                        text: '${movie.releaseDate}\n\n',
+                        style: baseStyle.copyWith(height: 0.5),
+                      ),
+                    ],
+                  ),
+                  textHeightBehavior: TextHeightBehavior(
+                    applyHeightToLastDescent: false,
+                    applyHeightToFirstAscent: false,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text.rich(
                       TextSpan(
                         text: 'Calificación: ',
                         style: baseStyle.copyWith(fontWeight: FontWeight.bold),
                       ),
-                      TextSpan(text: '${movie.voteAverage} ⭐\n'),
-                    ],
-                  ),
+                    ),
+                    StarRatingWidget(
+                      puntuacion: detailScreenArguments.movie.voteAverage,
+                    ),
+                  ],
                 ),
-                const Divider(thickness: 5),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
+                Divider(thickness: 5),
+                SizedBox(height: 10),
                 Text.rich(
                   TextSpan(
                     style: baseStyle,
@@ -189,6 +212,34 @@ class _DetailPopularMovieState extends State<DetailPopularMovie> {
                 ),
               ],
             ),
+            SizedBox(height: 10),
+            Divider(thickness: 5),
+            SizedBox(height: 10),
+            Text(
+              "Actores de reparto",
+              style: baseStyle.copyWith(fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            FutureBuilder<List<Actor>>(
+              future: fetchMovieActors(movie.id),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text('Error al cargar el reparto'),
+                  );
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text('No se encontraron actores'),
+                  );
+                }
+                return ActorListWidget(actores: snapshot.data!);
+              },
+            ),
+            SizedBox(height: 30),
           ],
         ),
       ),
@@ -201,6 +252,7 @@ class _DetailPopularMovieState extends State<DetailPopularMovie> {
     if (videoKey != null) {
       await openYoutubeVideo(videoKey);
     } else {
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('No se encontró trailer')));

@@ -24,9 +24,12 @@ class ItemPopularWidget extends StatelessWidget {
       child: Stack(
         alignment: Alignment.bottomLeft,
         children: [
-          FadeInImage(
-            placeholder: AssetImage('assets/loading.gif'),
-            image: NetworkImage(popularModel.backdropPath),
+          Hero(
+            tag: popularModel.id,
+            child: FadeInImage(
+              placeholder: AssetImage('assets/loading.gif'),
+              image: NetworkImage(popularModel.backdropPath),
+            ),
           ),
           Container(
             color: Colors.purple,

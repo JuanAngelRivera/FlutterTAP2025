@@ -25,6 +25,8 @@ class Favorite {
       print("✅ Pelicula registrada correctamente|MarcarFavorito");
 
       if (!context.mounted) return;
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('🎉 Película agregada a favoritos!'),
