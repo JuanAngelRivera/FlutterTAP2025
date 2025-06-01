@@ -1,7 +1,7 @@
-import 'package:flutter/foundation.dart';
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_application/models/popular_model.dart';
-import 'package:flutter_application/screens/detail_popular_movie.dart';
+import 'package:flutter_application/network/trailer.dart';
 import 'package:flutter_application/utils/DetailScreenArguments.dart';
 import 'package:flutter_application/widgets/favoriteButtonWidget.dart';
 
@@ -13,14 +13,16 @@ class DetailPopularMovie extends StatefulWidget {
 }
 
 class _DetailPopularMovieState extends State<DetailPopularMovie> {
-  final textStyle = TextStyle(
+  late DetailScreenArguments detailScreenArguments;
+
+  final textStyle = const TextStyle(
     color: Colors.white,
     fontSize: 20,
     fontFamily: 'Arial',
     fontWeight: FontWeight.normal,
   );
 
-  final baseStyle = TextStyle(
+  final baseStyle = const TextStyle(
     color: Colors.black,
     fontSize: 20,
     fontFamily: 'Arial',
@@ -29,102 +31,179 @@ class _DetailPopularMovieState extends State<DetailPopularMovie> {
 
   @override
   Widget build(BuildContext context) {
-    final detailScreenArguments =
+    detailScreenArguments =
         ModalRoute.of(context)!.settings.arguments as DetailScreenArguments;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: 300,
-            floating: true,
-            snap: true,
-            backgroundColor: Colors.purple,
-            elevation: 0,
-            title: Text(
-              detailScreenArguments.movie.title,
-              style: textStyle.copyWith(
-                fontSize: 28,
-                fontWeight: FontWeight.w800,
+        slivers: [_buildSliverAppBar(), _buildMovieDetails()],
+      ),
+    );
+  }
+
+  /// SliverAppBar con imagen + botón de reproducción
+  SliverAppBar _buildSliverAppBar() {
+    return SliverAppBar(
+      expandedHeight: 300,
+      floating: true,
+      snap: true,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      pinned: true,
+      title: Text(
+        detailScreenArguments.movie.title,
+        style: textStyle.copyWith(fontSize: 28, fontWeight: FontWeight.w800),
+      ),
+      centerTitle: true,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back, color: Colors.white, size: 32),
+        onPressed: () => Navigator.of(context).pop(),
+      ),
+      flexibleSpace: GestureDetector(
+        onTap: _onVideoTap,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            FadeInImage(
+              placeholder: const AssetImage('assets/loading.gif'),
+              image: NetworkImage(detailScreenArguments.movie.posterPath),
+              fit: BoxFit.cover,
+              alignment: Alignment.topCenter,
+            ),
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.transparent, Colors.white],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
               ),
             ),
-            centerTitle: true,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.white, size: 32),
-              onPressed: Navigator.of(context).pop,
+            Center(
+              child: Icon(
+                Icons.play_circle_fill,
+                color: Colors.white.withAlpha(200),
+                size: 64,
+              ),
             ),
-            flexibleSpace: LayoutBuilder(
-              builder: (context, constraints) {
-                final percent =
-                    (1 -
-                        (constraints.maxHeight - kToolbarHeight) /
-                            ((300 - kToolbarHeight).clamp(0.0, 1.0)));
+          ],
+        ),
+      ),
+    );
+  }
 
-                return Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Image(
-                      image: NetworkImage(
-                        detailScreenArguments.movie.posterPath,
-                      ),
-                      fit: BoxFit.cover,
-                    ),
+  /// Detalles de la película debajo del AppBar
+  SliverToBoxAdapter _buildMovieDetails() {
+    final movie = detailScreenArguments.movie;
 
-                    Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.topCenter,
-                          colors: [
-                            Colors.white.withAlpha(percent.toInt()),
-                            Colors.white.withAlpha(0),
-                          ],
-                        ),
-                      ),
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment:
+              CrossAxisAlignment.start, // Alinea todo a la izquierda
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  child: Text(
+                    movie.title,
+                    style: baseStyle.copyWith(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 32,
                     ),
-                  ],
-                );
-              },
+                  ),
+                ),
+                FavoriteButtonWidget(
+                  movieId: movie.id,
+                  onFavoriteChanged: detailScreenArguments.onFavoriteChanged!,
+                  isFavorite: movie.isFavorite,
+                ),
+              ],
             ),
-            pinned: true,
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            SizedBox(height: 10),
+            Divider(thickness: 5),
+            SizedBox(height: 10),
+            Center(
+              child: Text(
+                "Información de la película",
+                style: baseStyle.copyWith(fontWeight: FontWeight.w900),
+                textAlign: TextAlign.right,
+              ),
+            ),
+            SizedBox(height: 10),
+            Divider(thickness: 5),
+            SizedBox(height: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text.rich(
+                  TextSpan(
+                    style: baseStyle,
                     children: [
-                      Flexible(
-                        child: Text(
-                          detailScreenArguments.movie.title,
-                          style: baseStyle.copyWith(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 32,
-                          ),
-                        ),
+                      TextSpan(
+                        text: 'Título original: ',
+                        style: baseStyle.copyWith(fontWeight: FontWeight.bold),
                       ),
-                      FavoriteButtonWidget(
-                        movieId: detailScreenArguments.movie.id,
-                        onFavoriteChanged:
-                            detailScreenArguments.onFavoriteChanged!,
-                        isFavorite: detailScreenArguments.movie.isFavorite,
+                      TextSpan(text: '${movie.originalTitle}\n\n'),
+                      TextSpan(
+                        text: 'Lenguaje original: ',
+                        style: baseStyle.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      TextSpan(
+                        text: '${movie.originalLanguage.toUpperCase()}\n\n',
+                      ),
+                      TextSpan(
+                        text: 'Estreno: ',
+                        style: baseStyle.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      TextSpan(text: '${movie.releaseDate}\n\n'),
+                      TextSpan(
+                        text: 'Calificación: ',
+                        style: baseStyle.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      TextSpan(text: '${movie.voteAverage} ⭐\n'),
+                    ],
+                  ),
+                ),
+                const Divider(thickness: 5),
+                const SizedBox(height: 10),
+                Text.rich(
+                  TextSpan(
+                    style: baseStyle,
+                    children: [
+                      TextSpan(
+                        text: 'Sinopsis:\n',
+                        style: baseStyle.copyWith(fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
-
-                  Text(
-                    "Titulo original: ${detailScreenArguments.movie.originalTitle}",
-                    style: baseStyle,
-                  ),
-                ],
-              ),
+                ),
+                Text(
+                  movie.overview,
+                  textAlign: TextAlign.justify,
+                  style: baseStyle.copyWith(fontSize: 18),
+                ),
+              ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
+  }
+
+  /// Acción al tocar la imagen para ver el video
+  Future<void> _onVideoTap() async {
+    final videoKey = await fetchTrailerVideoKey(detailScreenArguments.movie.id);
+    if (videoKey != null) {
+      await openYoutubeVideo(videoKey);
+    } else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('No se encontró trailer')));
+    }
   }
 }

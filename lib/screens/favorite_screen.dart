@@ -35,15 +35,40 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context, true); // <- Envía señal al volver
+            Navigator.pop(context, true);
           },
         ),
       ),
       body:
           GlobalValues.sessionId == null
               ? Center(
-                child: Text(
-                  "Aún no has iniciado sesión para ver tus favoritos.",
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "No tienes películas marcadas como favoritas.\nDa clic en el siguiente botón para iniciar sesión:",
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () async {
+                        final result = await Navigator.pushNamed(
+                          context,
+                          "/sesion",
+                          arguments: 0,
+                        );
+                        if (result != null) {
+                          setState(() {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('🎉 Sesión Iniciada!')),
+                            );
+                          });
+                        }
+                      },
+
+                      child: Text("INICIAR SESION"),
+                    ),
+                  ],
                 ),
               )
               : FutureBuilder(

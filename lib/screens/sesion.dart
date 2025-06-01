@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application/network/favorite.dart';
 import 'package:flutter_application/network/tMDBAuth.dart';
+import 'package:flutter_application/screens/challenge_screen.dart';
 import 'package:flutter_application/utils/global_values.dart';
 
 class LoginTMDBPage extends StatefulWidget {
@@ -49,14 +51,41 @@ class _LoginTMDBPageState extends State<LoginTMDBPage> {
   Widget build(BuildContext context) {
     final movieId = ModalRoute.of(context)!.settings.arguments as int;
     return Scaffold(
-      appBar: AppBar(title: Text("Login TMDB")),
+      appBar: AppBar(
+        title: Text(
+          "Login TMDB",
+          style: textStyle.copyWith(color: Colors.white, fontSize: 32),
+        ),
+        foregroundColor: Colors.white,
+        centerTitle: true,
+        backgroundColor: Colors.purple,
+      ),
       body: Padding(
-        padding: EdgeInsets.all(16),
+        padding: EdgeInsets.all(30),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text(
+              "Da clic al botón 'Iniciar autorización'. Te llevará a una página que tendrás que autorizar.",
+              textAlign: TextAlign.center,
+              style: textStyle.copyWith(
+                color: Colors.black,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+            SizedBox(height: 16),
             ElevatedButton(
               onPressed: iniciarAutorizacion,
               child: Text("Iniciar autorización"),
+            ),
+            SizedBox(height: 16),
+            Text(
+              "Luego dale clic a 'Confirmar autorización y ya tendrás sesión iniciada.",
+              textAlign: TextAlign.center,
+              style: textStyle.copyWith(
+                color: Colors.black,
+                fontWeight: FontWeight.normal,
+              ),
             ),
             SizedBox(height: 16),
             ElevatedButton(
